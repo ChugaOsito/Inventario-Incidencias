@@ -63,7 +63,7 @@ class ProductoController extends Controller
         return view('producto.create')->with('productos',$productos)->with('codigos',$codigos)->with('marcas',$marcas)->with('modelos',$modelos)->with('estados',$estados)->with('users',$users)->with('departamentos',$departamentos);
     }
 
-     public function postProducto(Request $request, producto $productos) 
+     public function postProducto(Request $request, producto $productos)
      {
      $data = $request->validate([
         'serie' => 'required|max:16|min:8|unique:productos',
@@ -89,7 +89,7 @@ class ProductoController extends Controller
         'user_id.required'=>'El custodio es obligatorio',
         'precio.required'=>'El precio es obligatorio',
         'modelo.required'=>'El modelo es obligatorio',
-        'descripcion.required'=>'El nombre es obligatorio',
+       'descripcion.required'=>'El nombre es obligatorio',
         'estado.required'=>'El estado es obligatorio',
         'departamento.required'=>'El departamento es obligatoria',
         'imagen.required' => 'Subir imagen del producto'
@@ -112,11 +112,11 @@ class ProductoController extends Controller
             'marca_id'=>$data['marca'],
             "departamento_id"=>$data['departamento'],
             "imagen"=>$ruta_imagen
-            
-        ]); 
+
+        ]);
         return back()->with('notification', 'Producto registrado existosamente.');
     }
-    public function postProductoCreate(Request $request, producto $productos) 
+    public function postProductoCreate(Request $request, producto $productos)
     {
         $data = $request->validate([
             'serie' => 'required|max:16|min:8|unique:productos',
@@ -127,7 +127,7 @@ class ProductoController extends Controller
             'precio' => 'required',
             'marca'=>'required',
             'modelo'=>'required',
-            'descripcion'=>'required',
+            //'descripcion'=>'required',
             'estado'=>'required',
             'imagen' => 'required',
             'departamento' => 'required'
@@ -141,7 +141,7 @@ class ProductoController extends Controller
             'user_id.required'=>'El custodio es obligatoria',
             'precio.required'=>'El precio es obligatorio',
             'modelo.required'=>'El modelo es obligatorio',
-            'descripcion.required'=>'El nombre es obligatorio',
+           // 'descripcion.required'=>'El nombre es obligatorio',
             'estado.required'=>'El estado es obligatorio',
             'departamento.required'=>'El departamento es obligatoria',
             'imagen.required' => 'Subir imagen del producto'
@@ -149,30 +149,32 @@ class ProductoController extends Controller
         );
             $ruta_imagen = $request['imagen']->store('imagenes','public');
             $url = Storage::url($ruta_imagen);
-        
-        DB::table('productos')->insert([
+            $code=$this->Numerar($data['codigos_id']);
+            DB::table('productos')->insert([
             'serie'=>$data['serie'],
             'codigos_id'=>$data['codigos_id'],
+            'codigo'=>$code,
             'caracteristicas'=>$data['caracteristicas'],
             'fecha_ingreso'=>date('Y-m-d H:i:s'),
             'fecha_compra'=>$data['fecha_compra'],
             'user_id'=>$data['user_id'],
             'precio'=>$data['precio'],
-            'descripcion'=>$data['descripcion'],
+            'descripcion'=>$request->input('descripcion'),
             'estado_id'=>$data['estado'],
             'modelo_id'=>$data['modelo'],
             'marca_id'=>$data['marca'],
             "departamento_id"=>$data['departamento'],
+            "father_product_id"=>"",
             "imagen"=>$ruta_imagen,
         ]);
 
     $dt = Carbon::now();
     $todayDate = $dt->toDayDateTimeString();
     $responsable = Auth::User();
-            
+
     $activityLog = [
         'responsable'	    => $responsable->name,
-        'descripcion'		=> $data['descripcion'],
+        'descripcion'		=> $request->input('descripcion'),
         'serie'			    => $data['serie'],
         'departamento_id'	=> $data['departamento'],
         'modyfy_user'		=> 'CREATE_PRODUCT',
@@ -181,7 +183,7 @@ class ProductoController extends Controller
 
     DB::table('producto_activity_logs')->insert($activityLog);
     return back()->with('notification', 'Producto registrado existosamente.');
-    
+
     }
     public function show($id,  Request $request)
     {
@@ -190,7 +192,7 @@ class ProductoController extends Controller
         //FECHA DE COMPRA
         $fecha_compra = $producto->fecha_compra;
         $fecha_vencimiento = $producto->fecha_vencimiento;
-    
+
         $A = $producto->precio;
 
         if ($fecha_vencimiento === null){
@@ -198,7 +200,7 @@ class ProductoController extends Controller
         $fecha_compra = $producto->fecha_compra;
         $A = new Carbon ($fecha_compra);
 
-        //Guardar fecha_vencimiento (3 años más al de la compra) 
+        //Guardar fecha_vencimiento (3 años más al de la compra)
         $fecha_vencimiento = $A->addYear(3);
         $producto->fecha_vencimiento = $fecha_vencimiento;
         $producto->update();
@@ -217,7 +219,7 @@ class ProductoController extends Controller
         $diffDays = $fecha_vencimiento->diffInYears($fecha_actual);  #Días que faltan para que termine
         $pastDays = $fecha_compra->diffInYears($fecha_actual);       #Días ya transcurridos
         $msgInfo= $fecha_vencimiento == $fecha_actual ? "Terminado": "Faltan $totalAños años y $diffDays días. Han transcurrido $pastDays de $totalDays días totales";
-        
+
         //return dd( $msgInfo) ;
 
         if ($fecha_actual->diffInYears($fecha_vencimiento,false) <=0){
@@ -229,15 +231,15 @@ class ProductoController extends Controller
                 'options' => Carbon::JUST_NOW,
                 'syntax' => CarbonInterface::DIFF_ABSOLUTE,
                 'parts' => 3,
-                'short' => true,  
+                'short' => true,
             ]);
-        
+
             $producto->vencimiento = $contador;
             $producto->update();
 
             //return dd($contador);
             }
-           
+
             if ($producto->vencimiento >= 3 ){
                 $producto->precio_devaluado = $producto->precio;
                 $producto->update();
@@ -246,7 +248,7 @@ class ProductoController extends Controller
                 $producto->precio_devaluado = null;
                 $producto = Producto::find($id);
                 $A = $producto->precio;
-                $porcentaje = $A / 3; 
+                $porcentaje = $A / 3;
                 $B = $producto->precio - $porcentaje;
                 $producto->precio_devaluado = $B;
                 $producto->update();
@@ -256,7 +258,7 @@ class ProductoController extends Controller
                 $producto = Producto::find($id);
                 $producto->update();
                 $A = $producto->precio;
-                $porcentaje = $A / 3; 
+                $porcentaje = $A / 3;
                 $B = $producto->precio - $porcentaje;
                 $C = $B - $porcentaje;
                 $producto->precio_devaluado = $C;
@@ -345,7 +347,7 @@ class ProductoController extends Controller
         $dt = Carbon::now();
         $todayDate = $dt->toDayDateTimeString();
         $responsable = Auth::User();
-    
+
         $serie = $producto->serie;
         $descripcion =  $producto->descripcion;
         $departamento = $producto->departamento_id;
@@ -353,7 +355,7 @@ class ProductoController extends Controller
         $dt = Carbon::now();
         $todayDate = $dt->toDayDateTimeString();
         $responsable = Auth::User();
-   
+
    $activityLog = [
        'responsable'	    => $responsable->name,
        'descripcion'		=> $descripcion,
@@ -378,7 +380,7 @@ class ProductoController extends Controller
         $dt = Carbon::now();
         $todayDate = $dt->toDayDateTimeString();
         $responsable = Auth::User();
-   
+
    $activityLog = [
        'responsable'	    => $responsable->name,
        'descripcion'		=> $descripcion,
@@ -394,7 +396,7 @@ class ProductoController extends Controller
     public function restore($id)
     {
         Producto::withTrashed()->find($id)->restore();
-        
+
         return back()->with('notification', 'El producto se ha habilitado correctamente.');
     }
     public function imprimir(){
@@ -415,6 +417,177 @@ class ProductoController extends Controller
 
         return view('producto.producto_activity_log', compact('activityLog'))->with('departamentos',$departamentos);;
     }
+    public function anexos($id)
+    {
 
+     $product=Producto::find($id);
+
+     $productos=Producto::where("father_product_id","=",$id)->withTrashed()->get();
+        $marcas=Marca::all(['id','nombre']);
+        $modelos=Modelo::all(['id','nombre']);
+        $estados=Estado::all(['id','nombre']);
+        $users=User::all(['id','name']);
+        $codigos=Codigo::all(['id', 'nombre', 'numero']);
+        $departamentos=Departamento::all(['id','nombre']);
+
+        return view('producto.annex')->with(compact('product'))->with('productos',$productos)->with('codigos',$codigos)->with('marcas',$marcas)->with('modelos',$modelos)->with('estados',$estados)->with('users',$users)->with('departamentos',$departamentos);
+
+    }
+
+    public function anexar($id,Request $request, producto $productos)
+    {
+        $data = $request->validate([
+            'serie' => 'required|max:16|min:8|unique:productos',
+            'caracteristicas'=>'required',
+            'codigos_id'=>'required',
+            'fecha_compra'=>'required',
+            'user_id'=>'required',
+            'precio' => 'required',
+            'marca'=>'required',
+            'modelo'=>'required',
+            //'descripcion'=>'required',
+            'estado'=>'required',
+            'imagen' => 'required',
+            'departamento' => 'required'
+        ],[
+            'serie.required'=>'El número de serie es obligatorio',
+            'serie.unique'=>'La serie ya esta en uso',
+            'caracteristicas.required'=>'Las características son obligatorias',
+            'codigos_id.required'=>'el codigo es obligatoria',
+            'marca.required'=>'La marca es obligatoria',
+            'fecha_compra.required'=>'La fecha de compra es obligatoria',
+            'user_id.required'=>'El custodio es obligatoria',
+            'precio.required'=>'El precio es obligatorio',
+            'modelo.required'=>'El modelo es obligatorio',
+           // 'descripcion.required'=>'El nombre es obligatorio',
+            'estado.required'=>'El estado es obligatorio',
+            'departamento.required'=>'El departamento es obligatoria',
+            'imagen.required' => 'Subir imagen del producto'
+        ]
+        );
+            $ruta_imagen = $request['imagen']->store('imagenes','public');
+            $url = Storage::url($ruta_imagen);
+
+            DB::table('productos')->insert([
+            'serie'=>$data['serie'],
+            'codigos_id'=>$data['codigos_id'],
+            'codigo'=>$this->NumerarAnexo($id),
+            'caracteristicas'=>$data['caracteristicas'],
+            'fecha_ingreso'=>date('Y-m-d H:i:s'),
+            'fecha_compra'=>$data['fecha_compra'],
+            'user_id'=>$data['user_id'],
+            'precio'=>$data['precio'],
+            'descripcion'=>$request->input('descripcion'),
+            'estado_id'=>$data['estado'],
+            'modelo_id'=>$data['modelo'],
+            'marca_id'=>$data['marca'],
+            "departamento_id"=>$data['departamento'],
+            "father_product_id"=>$id,
+            "imagen"=>$ruta_imagen,
+        ]);
+
+    $dt = Carbon::now();
+    $todayDate = $dt->toDayDateTimeString();
+    $responsable = Auth::User();
+
+    $activityLog = [
+        'responsable'	    => $responsable->name,
+        'descripcion'		=> $request->input('descripcion'),
+        'serie'			    => $data['serie'],
+        'departamento_id'	=> $data['departamento'],
+        'modyfy_user'		=> 'CREATE_PRODUCT',
+        'date_time'         => $todayDate
+    ];
+
+    DB::table('producto_activity_logs')->insert($activityLog);
+    return back()->with('notification', 'Producto registrado existosamente.');
+
+    }
+
+//Inicio Metodos
+//Inicio Numeracion
+
+ //Numeracion Recomendacion
+ function NumerarAnexo($id){
+    $numero = Producto::where("father_product_id","=",$id)->count();
+$code=Producto::find($id);
+
+    $a=0;
+    $numero=$numero-10;
+    if($numero<=0){
+        $numero=1;
+
+    }
+    while ($a = 1) {
+        $codigo=$code->codigo.'.'.$numero;
+       $consulta= $this->VerificarNumeracion($codigo);
+
+        if($consulta==NULL){
+$a=1;
+return $codigo;
+        }
+        $numero=$numero+1;
+
+
+
+    }
 
 }
+
+ function Numerar($id_bien){
+    $numero = Producto::where("codigos_id","=",$id_bien)->count();
+$code=Codigo::find($id_bien);
+
+    $a=0;
+    $numero=$numero-10;
+    if($numero<=0){
+        $numero=1;
+
+    }
+    while ($a = 1) {
+        $codigo=$code->codigo.'.'.$numero;
+       $consulta= $this->VerificarNumeracion($codigo);
+
+        if($consulta==NULL){
+$a=1;
+return $codigo;
+        }
+        $numero=$numero+1;
+
+
+
+    }
+
+}
+    //Fin Numeracion Recomendacion
+
+      //Verificar Numeracion
+      function VerificarNumeracion($numeroAverificar){
+        $consulta = Producto::where("codigo","=",$numeroAverificar)->count();
+    return $consulta;
+
+      }
+
+  //Fin Verificar Numeracion
+//Fin Metodos
+}
+
+
+/*
+            $new_product= new Producto();
+            $new_product->serie= $request->input('serie');
+            $new_product->codigos_id= $request->input('codigos_id');
+            $new_product->caracteristicas= $request->input('caracteristicas');
+            $new_product->fecha_ingreso= date('Y-m-d H:i:s');
+            $new_product->fecha_compra= $request->input('fecha_compra');
+            $new_product->user_id= $request->input('user_id');
+            $new_product->precio= $request->input('precio');
+            $new_product->descripcion= $request->input('descripcion');
+            $new_product->estado_id= $request->input('estado');
+            $new_product->modelo_id= $request->input('modelo');
+            $new_product->marca_id= $request->input('marca');
+            $new_product->departamento_id= $request->input('departamento');
+            $new_product->imagen= $ruta_imagen;
+            $new_product->father_product_id= null;
+            $new_product->save();
+*/

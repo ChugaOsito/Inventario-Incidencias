@@ -34,11 +34,11 @@
                 <table id="productos" class="table table-striped dt-responsive nowrap" style="width:100%">
                     <thead class="bg-primary text-light">
                         <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">Tipo de Bien</th>
                             <th scope="col">Detalle</th>
                             <th scope="col">Custodio</th>
                             <th scope="col">Código</th>
-                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripcion</th>
                             <th class="bg-success" scope="col">Estado</th>
                             <th scope="col">Depreciación</th>
                             <th scope="col">Fecha de registro</th>
@@ -48,15 +48,12 @@
                     </thead>
                     <tbody>
                         @foreach($productos as $producto)
-                        <td>{{ $producto->id}}</td>
+                        <td>{{ $producto->codigos->nombre}}</td>
+
                         <td><a href="/productos/{{ $producto->id }}/show" class="btn btn-sm btn-warning"
                                 title="Editar">Detalle</a></td>
                         <td>{{$producto->users->name}}</td>
-                        @if ($producto->codigos->numero == null)
-                        <td>{{$producto->codigos->codigo}}.{{$producto->name_codigo}}</td>
-                        @else
-                        <td>{{$producto->codigos->codigo}}.{{$producto->codigos->numero}}.{{$producto->name_codigo}}</td>
-                        @endif
+                        <td>{{$producto->codigo}}</td>
                         <td>{{ $producto->descripcion}}</td>
                         @if ($producto->estados->nombre == "OPERATIVO")
                         <td bgcolor="#5D7B9D">
@@ -92,6 +89,9 @@
                                 title="Restaurar">Restaurar
                             </a>
                             @else
+                            <a href="/productos/{{ $producto->id }}/anexos" class="btn btn-sm btn-primary"
+                                title="Registrar Equipo Anexo">Equipos Anexos
+                            </a>
                             <a href="/productos/{{ $producto->id }}/editar" class="btn btn-sm btn-primary"
                                 title="Editar">Editar
                             </a>

@@ -39,7 +39,7 @@
         </div>
 
         <div class="row mb-3">
-            <label for="descripción" class="col-md-4 col-form-label text-md-end">{{ __('Nombre del equipo') }}</label>
+            <label for="descripción" class="col-md-4 col-form-label text-md-end">{{ __('Descripcion del equipo') }}</label>
         <div class="col-md-6">
         <input style="text-transform:uppercase;" type="text" name="descripcion" class="form-control" value="{{ old('descripcion') }}">
         </div>
@@ -50,7 +50,7 @@
         <div class="col-md-6">
         <input readonly id= "datepicker" style="text-transform:uppercase;" type="text" class="form-control"  name="fecha_compra"></i>
         </div>
-        </div> 
+        </div>
         <script>
                 $('#datepicker').datepicker({
                     maxDate : new Date(),
@@ -77,7 +77,7 @@
             </select>
         </div>
         </div>
-        
+
         <div class="row mb-3">
             <label for="estado" class="col-md-4 col-form-label text-md-end" >Estado</label>
             <div class="col-md-6">

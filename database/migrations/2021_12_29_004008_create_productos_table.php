@@ -16,6 +16,7 @@ class CreateProductosTable extends Migration
         Schema::create('productos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('codigos_id')->constrained('codigos')->nullable()->onDelete('cascade');
+            $table->String('codigo');
             $table->timestamp('fecha_ingreso');
             $table->timestamp('fecha_compra')->nullable();
             $table->timestamp('fecha_vencimiento')->nullable();
@@ -23,18 +24,17 @@ class CreateProductosTable extends Migration
             $table->String('precio_devaluado')->nullable();
             $table->String('vencimiento')->nullable();
             $table->string('serie')->unique();
-            $table->text('descripcion');
+            $table->text('descripcion')->nullable();
             $table->text('caracteristicas');
             $table->string('imagen')->nullable();
             $table->softDeletes();
-
-            
+            $table->String('father_product_id')->nullable();
             $table->foreignId('user_id')->constrained('users')->unsigned()->nullable();
             $table->foreignId('estado_id')->constrained('estados')->nullable();
             $table->foreignId('marca_id')->constrained('marcas')->nullable();
             $table->foreignId('modelo_id')->constrained('modelos')->nullable();
             $table->foreignId('departamento_id')->constrained('departamentos')->nullable();
-            
+
             $table->timestamps();
         });
     }

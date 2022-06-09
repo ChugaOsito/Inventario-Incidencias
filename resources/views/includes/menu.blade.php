@@ -38,7 +38,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="/productos">Equipos tecnologicos</a></li>
 						<li><a href="/productos/create">Agregar equipo</a></li>
-						<li><a href="/codigos/create">Agregar códigos</a></li>
+						<li><a href="/codigos/create">Agregar Tipo de Bien</a></li>
 					</ul>
 				</li>
 				<li role="presentation" class="dropdown">

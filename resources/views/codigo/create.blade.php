@@ -3,7 +3,7 @@
 @section('content')
 @if (auth()->user()->is_admin)
 <div class="panel panel-primary">
-    <div class="panel-heading">Agregar codigo</div>
+    <div class="panel-heading">Agregar Tipo de Bien</div>
 
     <div class="panel-body">
         @if (session('notification'))
@@ -22,23 +22,21 @@
         @endif
         <form action="" method="POST">
             {{ csrf_field() }}
-             <div class="form-group">
-                <label for="codigo">Código</label>
-                <input type="text" name="codigo" class="form-control" placeholder="Ingrese código">
-            </div>
             <div class="form-group">
-                <label for="nombre">Nombre del tipo de bien</label>
+                <label for="nombre">Tipo de bien</label>
                 <input type="text" name="nombre" class="form-control" placeholder="Ingrese nombre del equipo tecnologico">
             </div>
-            <div class="form-group">
-                <label for="numero">Número del bien</label>
-                <input type="text" name="numero" class="form-control" placeholder="Ingrese número del equipo tecnologico">
+
+             <div class="form-group">
+                <label for="codigo">Código <em> (Si este campo se deja vacío se asignará un código automáticamente)</em></label>
+                <input type="text" name="codigo" class="form-control" placeholder="Ingrese código">
             </div>
+
             <div class="form-group">
-                <button class="btn btn-primary">Registrar codigo</button>
+                <button class="btn btn-primary">Registrar Bien</button>
             </div>
         </form>
-        
+
         <form method="GET" action="{{ route('codigos') }}">
             {{ csrf_field() }}
             <div style="overflow-x:auto;">
@@ -48,7 +46,8 @@
                             <th scope="col">Id</th>
                             <th scope="col">Codigo</th>
                             <th scope="col">Tipo de bien</th>
-                            <th scope="col">Número</th>
+
+
                             <th scope="col">Editar</th>
                         </tr>
                     </thead>
@@ -57,7 +56,7 @@
                         <td>{{ $codigo->id }}</td>
                         <td>{{ $codigo->codigo }}</td>
                         <td>{{ $codigo->nombre }}</td>
-                        <td>{{ $codigo->numero }}</td>
+
                         <td>
                             <a href="/codigos/{{ $codigo->id }}/editar" class="btn btn-sm btn-success"
                                 title="Editar">Editar
@@ -103,3 +102,4 @@
     @endif
     @method('PUT')
     @endsection
+

@@ -43,22 +43,50 @@ class CodigoController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-                'nombre' => 'required',
-                'codigo' => 'required',
-                
-                    
+
+        if($request->input('codigo')==null){
+            $rules = [
+                'nombre' => 'required|unique:codigos',
+
+
+
             ];
         $messages = [
                 'nombre.required'=>'El nombre es obligatorio',
-                'codigo.required'=>'El codigo es obligatorio',
+                'nombre.unique'=>'El nombre del bien ya existe',
+
+
             ];
-            
+        }else{
+            $rules = [
+                'nombre' => 'required|unique:codigos',
+                'codigo'=> 'unique:codigos'
+
+
+            ];
+        $messages = [
+                'nombre.required'=>'El nombre es obligatorio',
+                'nombre.unique'=>'El nombre del bien ya existe',
+                'codigo.unique'=>'El codigo del bien ya existe',
+
+            ];
+        }
+
+
         $this->validate($request, $rules, $messages);
 
-        request()->validate(Codigo::$rules);
 
-        $codigo = Codigo::create($request->all());
+if($request->input('codigo')==null){
+
+    $code=$this->numerar();
+}else{
+    $code=$request->input('codigo');
+}
+$annex =new Codigo();
+$annex->nombre= $request->input('nombre');
+$annex->codigo= $code;
+
+$annex->save();
 
         return redirect()->route('codigos/create')
             ->with('success', 'Modelo created successfully.');
@@ -116,4 +144,27 @@ class CodigoController extends Controller
         return redirect()->route('codigos/create')
             ->with('success', 'Modelo deleted successfully');
     }
+    public function numerar(){
+
+        $numero=Codigo::all()->count();
+
+        $a=0;
+            $numero=$numero-10;
+            if($numero<=0){
+                $numero=1;
+            }
+            while ($a = 1) {
+               $consulta= Codigo::where('codigo','=',$numero)->count();
+
+                if($consulta==0){
+        $a=1;
+        return $numero;
+                }
+                $numero=$numero+1;
+
+
+
+            }
+    }
+
 }

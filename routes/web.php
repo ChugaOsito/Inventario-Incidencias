@@ -68,6 +68,9 @@ Route::get('/productos/{id}/eliminar', 'ProductoController@delete');
 Route::get('/productos/{id}/restaurar', 'ProductoController@restore');
 
 Route::get('/productos/{id}/show', 'ProductoController@show')->name('producto.show');
+//Anexos
+Route::post('/productos/{id}/anexos', 'ProductoController@anexar')->name('producto.anexar');
+Route::get('/productos/{id}/anexos', 'ProductoController@anexos');
 //Buscar
 //Logs
 Route::get('/activity/Log', 'UserController@activityLog')->name('activity/log');
