@@ -48,6 +48,9 @@
                     </thead>
                     <tbody>
                         @foreach($productos as $producto)
+                        @if ($producto->father_product_id==null)
+
+
                         <td>{{ $producto->codigos->nombre}}</td>
 
                         <td><a href="/productos/{{ $producto->id }}/show" class="btn btn-sm btn-warning"
@@ -101,6 +104,7 @@
                             @endif
                         </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                 </table>

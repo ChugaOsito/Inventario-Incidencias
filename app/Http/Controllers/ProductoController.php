@@ -305,7 +305,7 @@ class ProductoController extends Controller
             'precio'=>'required',
             'marca'=>'required',
             'modelo'=>'required',
-            'descripcion'=>'required',
+           // 'descripcion'=>'required',
             'estado'=>'required',
             'departamento' => 'required'
         ],[
@@ -317,7 +317,7 @@ class ProductoController extends Controller
             'user_id.required'=>'El custodio es obligatoria',
             'modelo.required'=>'El modelo es obligatorio',
             'precio.required'=>'El precio es obligatorio',
-            'descripcion.required'=>'El nombre es obligatorio',
+            //'descripcion.required'=>'El nombre es obligatorio',
             'estado.required'=>'El estado es obligatorio',
             'departamento.required'=>'El departamento es obligatoria',
         ]

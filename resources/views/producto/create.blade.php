@@ -41,7 +41,7 @@
         <div class="row mb-3">
             <label for="descripción" class="col-md-4 col-form-label text-md-end">{{ __('Descripcion del equipo') }}</label>
         <div class="col-md-6">
-        <input style="text-transform:uppercase;" type="text" name="descripcion" class="form-control" value="{{ old('descripcion') }}">
+        <input style="" type="text" name="descripcion" class="form-control" value="{{ old('descripcion') }}">
         </div>
         </div>
 

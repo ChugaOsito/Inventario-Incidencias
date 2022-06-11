@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('content')    
+@section('content')
 @if (auth()->user()->is_admin)
 <div class="panel panel-primary">
     <div class="panel-heading">Editar Equipo tecnologico</div>
@@ -19,9 +19,9 @@
     </div>
 @endif
 <form method="POST" action=" {{ route('producto.update', $producto->id) }} " enctype="multipart/form-data" novalidate>
-    {{ csrf_field() }} 
+    {{ csrf_field() }}
         <img src="{{ asset('/storage/'.$producto->imagen) }}" class="img-thumbnail" width = "100" height = "100">&nbsp;
-       
+
         <div class="row mb-3">
             <label for="codigos_id" class="col-md-4 col-form-label text-md-end">Elegir Codigo</label>
             <div class="col-md-6">
@@ -29,25 +29,25 @@
                 <option value="">Elegir codigo</option>
                 @foreach($codigos as $codigo)
                 <option value="{{ $codigo->id }}" @if($producto->codigos_id == $codigo->id) selected @endif>{{ $codigo->nombre }}{{ $codigo->numero }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('codigos_id')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
         <div class="row mb-3">
-        <label for="serie" class="col-md-4 col-form-label text-md-end">{{ __('Número de serie') }}</label>  
+        <label for="serie" class="col-md-4 col-form-label text-md-end">{{ __('Número de serie') }}</label>
         <div class="col-md-6">
         <input style="text-transform:uppercase;" type="text" class="form-control"  name="serie" maxlength="16" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="{{ old('serie', $producto->serie) }} "><i>(Mínimo 8 - Máximo 16 caracteres)</i>
         </div>
         </div>
 
         <div class="row mb-3">
-        <label for="descripción" class="col-md-4 col-form-label text-md-end">{{ __('Nombre del equipo') }}</label>
+        <label for="descripción" class="col-md-4 col-form-label text-md-end">{{ __('Descripcion del equipo') }}</label>
         <div class="col-md-6">
-        <input style="text-transform:uppercase;" type="text" name="descripcion" class="form-control" value ="{{ old('description', $producto->descripcion) }}"> </input>
+        <input style="" type="text" name="descripcion" class="form-control" value ="{{ old('description', $producto->descripcion) }}"> </input>
         </div>
         </div>
 
@@ -56,7 +56,7 @@
         <div class="col-md-6">
         <input readonly id= "datepicker" style="text-transform:uppercase;" type="text" class="form-control"  value ="{{ old('description', $producto->fecha_compra) }}" name="fecha_compra"></i>
         </div>
-        </div> 
+        </div>
         <script>
                 $('#datepicker').datepicker({
                     uiLibrary: 'bootstrap',
@@ -78,12 +78,12 @@
                 <option value="">Elegir Custodio</option>
                 @foreach($users as $user)
                 <option value="{{ $user->id }}" @if($producto->user_id == $user->id) selected @endif>{{ $user->name }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('user_id')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
 
@@ -94,12 +94,12 @@
                 <option value="">Elegir estado</option>
                 @foreach($estados as $estado)
                 <option value="{{ $estado->id }}" @if($producto->estado_id == $estado->id) selected @endif>{{ $estado->nombre }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('estado')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
         <div class="row mb-3">
@@ -109,12 +109,12 @@
                 <option value="">Elegir Marca</option>
                 @foreach($marcas as $marca)
                 <option value="{{ $marca->id }}" @if($producto->marca_id == $marca->id) selected @endif>{{ $marca->nombre }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('marca')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
         <div class="row mb-3">
@@ -124,12 +124,12 @@
                 <option value="">Elegir modelo</option>
                 @foreach($modelos as $modelo)
                 <option value="{{ $modelo->id }}" @if($producto->modelo_id == $modelo->id) selected @endif>{{ $modelo->nombre }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('modelo')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
          <div class="row mb-3">
@@ -139,12 +139,12 @@
                 <option value="">Elegir departamento</option>
                 @foreach($departamentos as $departamento)
                 <option value="{{ $departamento->id }}" @if($producto->departamento_id == $departamento->id) selected @endif>{{ $departamento->nombre }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('departamento')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
         <div class="row mb-3">
@@ -191,7 +191,7 @@
     </div>
 @endif
 <form method="POST" action=" {{ route('producto.update', $producto->id) }} " enctype="multipart/form-data" novalidate>
-    {{ csrf_field() }} 
+    {{ csrf_field() }}
     <img src="{{ asset('/storage/'.$producto->imagen) }}" class="img-thumbnail" width = "100" height = "100">
 
 
@@ -210,14 +210,14 @@
         </div>
 
         <div hidden class="row mb-3">
-        <label for="serie" class="col-md-4 col-form-label text-md-end">{{ __('Número de serie') }}</label>  
+        <label for="serie" class="col-md-4 col-form-label text-md-end">{{ __('Número de serie') }}</label>
         <div class="col-md-6">
         <input type="text" name="serie" class="form-control" value="{{ old('serie', $producto->serie) }} "></input>
         </div>
         </div>
 
         <div hidden class="row mb-3">
-        <label for="estado" class="col-md-4 col-form-label text-md-end">{{ __('Número de serie') }}</label>  
+        <label for="estado" class="col-md-4 col-form-label text-md-end">{{ __('Número de serie') }}</label>
         <div class="col-md-6">
         <input value="1" type="text" name="estado" class="form-control" value="{{ old('serie', $producto->estado) }} "></input>
         </div>
@@ -230,12 +230,12 @@
                 <option value="">Elegir Marca</option>
                 @foreach($marcas as $marca)
                 <option value="{{ $marca->id }}" @if($producto->marca_id == $marca->id) selected @endif>{{ $marca->nombre }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('marca')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
         <div hidden class="row mb-3">
@@ -245,12 +245,12 @@
                 <option value="">Elegir modelo</option>
                 @foreach($modelos as $modelo)
                 <option value="{{ $modelo->id }}" @if($producto->modelo_id == $modelo->id) selected @endif>{{ $modelo->nombre }}</option>
-                @endforeach 
+                @endforeach
             </select>
             @error('modelo')
                 <span class="invalid-feedback d-block" role="alert"><strong>{{$message}}</strong></span>
             @enderror
-          </div> 
+          </div>
         </div>
 
                 <div class="row mb-3">
